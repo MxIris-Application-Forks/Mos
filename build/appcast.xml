@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0"
+    xmlns:sparkle="http://www.andymatuschak.org/xml-namespaces/sparkle"
+    xmlns:dc="http://purl.org/dc/elements/1.1/">
+  <channel>
+    <title>Mos</title>
+    <link>https://mos.caldis.me/</link>
+    <description>Mos Updates</description>
+    <language>en</language>
+
+    <item>
+      <title>Mos 4.0.2</title>
+
+      <description><![CDATA[<h2>修复 / Fixes</h2>
+<ul>
+<li>修复平滑滚动导致的崩溃问题 / Fix crash caused by smooth scrolling (#868, #826, #699, #687, #665, #510, #512, #499, #368, #597, #859)
+<ul>
+<li>使用 CGEventPostToPid 直接投递合成滚动事件到目标进程, 彻底消除 processEventTapData 中的 use-after-free 崩溃</li>
+<li>Use CGEventPostToPid to deliver synthetic scroll events directly to the target process, eliminating the processEventTapData use-after-free crash</li>
+<li>动量阶段移动鼠标不再将滚动事件"带到"其他窗口</li>
+<li>Moving the mouse during momentum scrolling no longer redirects scroll events to other windows</li>
+</ul>
+</li>
+</ul>]]></description>
+      <pubDate>Sun, 08 Mar 2026 12:04:41 +0000</pubDate>
+
+      <enclosure
+        url="https://github.com/Caldis/Mos/releases/download/4.0.2/Mos.Versions.4.0.2-20260308.1.zip"
+        length="11429703"
+        type="application/octet-stream"
+        sparkle:shortVersionString="4.0.2"
+        sparkle:version="20260308.1"
+        sparkle:edSignature="OyDmc7SDE65uJGsk2ThaQPkSxwELe8NyxjL+Wgx8dEx6zAjXI5hdfoEySaNg1aUqDun8y/bEp5//6Q0b2mq+Ag=="
+      />
+    </item>
+
+    <item>
+      <title>Mos 4.0.0</title>
+
+      <description><![CDATA[<h2>新功能</h2>
+<ul>
+<li>全新「按钮」模块：将鼠标按键绑定到任意系统快捷操作。</li>
+<li>新增「模拟触控板 (Beta)」滚动模式。</li>
+<li>滚动方向反转现在支持垂直、水平方向独立设置。</li>
+<li>新增应用内更新检查（power by Sparkle）。</li>
+<li>新增远程桌面滚动事件检测, 如果发起端和受控端都安装了 Mos, 也不会冲突。</li>
+<li>滚动功能键现在支持自定义录制绑定。</li>
+</ul>
+
+<h2>优化</h2>
+<ul>
+<li>欢迎引导窗口 UI 翻新。</li>
+<li>全新应用图标与状态栏图标。</li>
+<li>滚动选项面板整合优化。</li>
+<li>适配 macOS 26 视觉风格。</li>
+<li>翻译系统迁移至 String Catalogs。</li>
+<li>新增法语翻译, 感谢 @EricPujolBRGM</li>
+<li>新增波兰语翻译, 感谢 @MaciejkaG</li>
+<li>新增印尼语翻译, 感谢 @harun-alrosyid</li>
+<li>日语本地化补全, 感谢 @ulyssas</li>
+<li>日语、印尼语文本校对, 感谢 @ulyssas @harun-alrosyid</li>
+<li>波兰语、英文文本校对, 感谢 @MaciejkaG</li>
+</ul>
+
+<h2>修复</h2>
+<ul>
+<li>修复多个滚动平滑相关问题。</li>
+<li>修复鼠标按键映射与辅助功能授权状态异常。</li>
+<li>修复非美式键盘快捷键问题, 感谢 @salakis</li>
+<li>修复鼠标中键映射问题, 感谢 @GonzFC</li>
+<li>修复其他已知问题。</li>
+</ul>
+
+<hr/>
+
+<h2>New Features</h2>
+<ul>
+<li>Brand-new Buttons module: bind mouse buttons to any system shortcut.</li>
+<li>Added Simulate Trackpad scrolling mode.</li>
+<li>Scroll direction reversal can now be set independently for vertical and horizontal axes.</li>
+<li>Added in-app update checking via Sparkle, with an optional beta channel.</li>
+<li>Added remote desktop scroll event detection, if both remote host and client are installed Mos still work fine.</li>
+<li>Scroll hotkeys can now be recorded and bound to custom keys.</li>
+</ul>
+
+<h2>Improvements</h2>
+<ul>
+<li>Refreshed the welcome guide UI.</li>
+<li>New app icon and menu bar icon.</li>
+<li>Consolidated scroll options panel.</li>
+<li>Adapted visual style for macOS 26.</li>
+<li>Migrated translations to String Catalogs.</li>
+<li>Added French translation, thanks to @EricPujolBRGM</li>
+<li>Added Polish translation, thanks to @MaciejkaG</li>
+<li>Added Indonesian translation, thanks to @harun-alrosyid</li>
+<li>Japanese localization completion, thanks to @ulyssas</li>
+<li>Japanese &amp; Indonesian text proofreading, thanks to @ulyssas @harun-alrosyid</li>
+<li>Polish &amp; English text proofreading, thanks to @MaciejkaG</li>
+</ul>
+
+<h2>Fixes</h2>
+<ul>
+<li>Fixed multiple smooth scrolling issues.</li>
+<li>Fixed mouse button mapping and accessibility authorization state issues.</li>
+<li>Fixed shortcuts on non-US keyboard layouts, thanks to @salakis</li>
+<li>Fixed middle mouse button mapping, thanks to @GonzFC</li>
+<li>Fixed other known issues.</li>
+</ul>]]></description>
+      <pubDate>Thu, 20 Feb 2026 00:00:00 +0000</pubDate>
+
+      <enclosure
+        url="https://github.com/Caldis/Mos/releases/download/4.0.0/Mos.Versions.4.0.0-20260220.1.zip"
+        length="11334806"
+        type="application/octet-stream"
+        sparkle:shortVersionString="4.0.0"
+        sparkle:version="20260220.1"
+        sparkle:edSignature="N1UZ25aHNADhPOBiqw5v+1rKhC28QXKzWFBQdcZq8oHN9brvZ1Rh3Hu2mQm/UveFSaK2RnqEFvyrbkziJy7eBw=="
+      />
+    </item>
+  </channel>
+</rss>

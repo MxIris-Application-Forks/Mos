@@ -2,6 +2,7 @@
 website/.idea
 website/.next
 website/node_modules
+website/out
 
 # macOS
 .DS_Store
@@ -10,3 +11,11 @@ website/node_modules
 xcuserdata
 *.xcuserstate
 *.xcuserdated
+
+# Sparkle signing keys (keep private!)
+sparkle_private_key.txt
+
+# build
+build/*.zip
+/build
+/spec

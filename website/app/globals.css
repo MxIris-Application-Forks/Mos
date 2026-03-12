@@ -3,21 +3,103 @@
 @tailwind utilities;
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --bg0: #000000;
+  --bg1: #090909;
+  --fg0: rgba(255, 255, 255, 0.92);
+  --fg1: rgba(255, 255, 255, 0.72);
+  --fg2: rgba(255, 255, 255, 0.52);
+  --border: rgba(255, 255, 255, 0.12);
+
+  --accent: #ffffff;
+  --accent2: #a1a1aa;
+  --accent3: #52525b;
+
+  --radius-xl: 26px;
+  --radius-card: 32px;
+
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+
+  --noise-opacity: 0.065;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+html,
+body {
+  height: 100%;
 }
 
 body {
-  color: var(--foreground);
-  background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
+  color: var(--fg0);
+  background:
+    radial-gradient(1100px 680px at 5% 8%, rgba(255, 255, 255, 0.10), transparent 55%),
+    radial-gradient(900px 620px at 88% 14%, rgba(255, 255, 255, 0.06), transparent 55%),
+    radial-gradient(1100px 820px at 45% 92%, rgba(255, 255, 255, 0.045), transparent 60%),
+    linear-gradient(180deg, var(--bg0), var(--bg1));
+  font-family:
+    var(--font-body),
+    ui-sans-serif,
+    system-ui,
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    Helvetica,
+    Arial,
+    "Apple Color Emoji",
+    "Segoe UI Emoji";
+  text-rendering: geometricPrecision;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+* {
+  -webkit-tap-highlight-color: transparent;
+}
+
+::selection {
+  background: rgba(255, 255, 255, 0.14);
+  color: rgba(255, 255, 255, 0.98);
+}
+
+/* A subtle, always-on grain to kill flat gradients. */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  opacity: var(--noise-opacity);
+  mix-blend-mode: overlay;
+  background-image:
+    repeating-linear-gradient(
+      0deg,
+      rgba(255, 255, 255, 0.05) 0px,
+      rgba(255, 255, 255, 0.05) 1px,
+      rgba(0, 0, 0, 0.00) 2px,
+      rgba(0, 0, 0, 0.00) 4px
+    ),
+    repeating-linear-gradient(
+      90deg,
+      rgba(255, 255, 255, 0.035) 0px,
+      rgba(255, 255, 255, 0.035) 1px,
+      rgba(0, 0, 0, 0.00) 2px,
+      rgba(0, 0, 0, 0.00) 5px
+    );
+  transform: translateZ(0);
+}
+
+/* Scrollbar (WebKit) */
+*::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+*::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.16);
+  border: 2px solid rgba(0, 0, 0, 0);
+  background-clip: content-box;
+  border-radius: 999px;
+}
+*::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.24);
+  border: 2px solid rgba(0, 0, 0, 0);
+  background-clip: content-box;
 }
 
 @keyframes modal-appear {
@@ -28,5 +110,239 @@ body {
   to {
     opacity: 1;
     transform: scale(1);
+  }
+}
+
+@keyframes stroke-in {
+  from {
+    stroke-dashoffset: 1;
+    opacity: 0.2;
+  }
+  to {
+    stroke-dashoffset: 0;
+    opacity: 1;
+  }
+}
+
+@keyframes float-slow {
+  0% {
+    transform: translate3d(0, 0, 0);
+  }
+  100% {
+    transform: translate3d(0, -14px, 0);
+  }
+}
+
+@keyframes homebrew-pulse {
+  0% {
+    border-color: rgba(255, 255, 255, 0.12);
+    box-shadow:
+      0 0 0 1px rgba(255, 255, 255, 0.10) inset,
+      0 0 0 0 rgba(255, 255, 255, 0),
+      0 0 0 rgba(0, 0, 0, 0);
+  }
+  28% {
+    border-color: rgba(255, 255, 255, 0.26);
+    box-shadow:
+      0 0 0 1px rgba(255, 255, 255, 0.18) inset,
+      0 0 0 1px rgba(255, 255, 255, 0.16),
+      0 0 0 10px rgba(255, 255, 255, 0.055),
+      0 0 64px rgba(255, 255, 255, 0.08);
+  }
+  100% {
+    border-color: rgba(255, 255, 255, 0.12);
+    box-shadow:
+      0 0 0 1px rgba(255, 255, 255, 0.10) inset,
+      0 0 0 0 rgba(255, 255, 255, 0),
+      0 0 0 rgba(0, 0, 0, 0);
+  }
+}
+
+@keyframes homebrew-sheen {
+  0% {
+    opacity: 0;
+    transform: translate3d(0, 10px, 0) scale(0.985);
+  }
+  30% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+}
+
+@layer utilities {
+  .font-display {
+    font-family:
+      var(--font-display),
+      var(--font-body),
+      ui-sans-serif,
+      system-ui,
+      -apple-system,
+      BlinkMacSystemFont,
+      "Segoe UI",
+      Helvetica,
+      Arial;
+  }
+
+  .font-mono {
+    font-family:
+      var(--font-mono),
+      ui-monospace,
+      SFMono-Regular,
+      Menlo,
+      Monaco,
+      Consolas,
+      "Liberation Mono",
+      "Courier New",
+      monospace;
+  }
+
+  .text-balance {
+    text-wrap: balance;
+  }
+
+  .glass {
+    background: rgba(8, 9, 14, 0.60);
+    border: 1px solid var(--border);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    box-shadow:
+      0 0 0 1px rgba(255,255,255,0.06) inset,
+      0 1px 0 rgba(255,255,255,0.12) inset,
+      0 32px 120px rgba(0,0,0,0.8);
+  }
+
+  .ring-accent {
+    box-shadow:
+      0 0 0 1px rgba(255, 255, 255, 0.10) inset,
+      0 0 0 1px rgba(255, 255, 255, 0.12),
+      0 24px 60px rgba(0, 0, 0, 0.55);
+  }
+
+  .shadow-elevated {
+    box-shadow:
+      0 32px 120px rgba(0, 0, 0, 0.80),
+      0 1px 0 rgba(255, 255, 255, 0.08) inset;
+  }
+
+  .orb {
+    position: absolute;
+    border-radius: 999px;
+    filter: blur(28px);
+    opacity: 0.10;
+    transform: translateZ(0);
+    animation: float-slow 7s var(--ease-out) infinite alternate;
+  }
+
+  .hairline {
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.18), transparent);
+  }
+
+  .homebrew-highlight {
+    position: relative;
+    isolation: isolate;
+    will-change: box-shadow;
+    animation: homebrew-pulse 1200ms var(--ease-out) both;
+  }
+
+  .homebrew-highlight::after {
+    content: "";
+    position: absolute;
+    inset: -2px;
+    border-radius: inherit;
+    pointer-events: none;
+    background:
+      radial-gradient(900px 260px at 28% 0%, rgba(255, 255, 255, 0.16), transparent 60%),
+      radial-gradient(720px 240px at 82% 10%, rgba(255, 255, 255, 0.10), transparent 62%);
+    mix-blend-mode: screen;
+    opacity: 0;
+    animation: homebrew-sheen 1200ms var(--ease-out) both;
+  }
+
+  .range {
+    -webkit-appearance: none;
+    appearance: none;
+    height: 2px;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.16);
+    outline: none;
+  }
+
+  .range::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 14px;
+    height: 14px;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.92);
+    border: 1px solid rgba(0, 0, 0, 0.28);
+    box-shadow:
+      0 0 0 6px rgba(255, 255, 255, 0.08),
+      0 14px 40px rgba(0, 0, 0, 0.55);
+    cursor: pointer;
+  }
+
+  .range::-webkit-slider-thumb:active {
+    transform: scale(0.96);
+  }
+
+  .range::-moz-range-thumb {
+    width: 14px;
+    height: 14px;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.92);
+    border: 1px solid rgba(0, 0, 0, 0.28);
+    box-shadow:
+      0 0 0 6px rgba(255, 255, 255, 0.08),
+      0 14px 40px rgba(0, 0, 0, 0.55);
+    cursor: pointer;
+  }
+
+  .range::-moz-range-track {
+    height: 2px;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.16);
+  }
+
+  /* Gradient text with safe fallback (avoid transparent text if background-clip isn't supported). */
+  .text-flow {
+    color: rgba(255, 255, 255, 0.96);
+  }
+}
+
+@supports ((-webkit-background-clip: text) or (background-clip: text)) {
+  @layer utilities {
+    .text-flow {
+      background-image: linear-gradient(
+        90deg,
+        rgba(255, 255, 255, 0.98) 0%,
+        rgba(255, 255, 255, 0.64) 38%,
+        rgba(255, 255, 255, 0.98) 86%
+      );
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      -webkit-text-fill-color: transparent;
+    }
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .homebrew-highlight {
+    animation: none;
+    border-color: rgba(255, 255, 255, 0.22);
+    box-shadow:
+      0 0 0 1px rgba(255, 255, 255, 0.14) inset,
+      0 0 0 1px rgba(255, 255, 255, 0.12),
+      0 0 32px rgba(255, 255, 255, 0.06);
+  }
+  .homebrew-highlight::after {
+    animation: none;
+    opacity: 0;
+  }
+  .orb {
+    animation: none;
   }
 }

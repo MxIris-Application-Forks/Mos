@@ -1,14 +1,116 @@
 export const en = {
-  nav_docs: "docs",
-  nav_github: "Github",
-  hero_title: "Scroll smoothly with Mos",
-  hero_description: "Mos is powerful tools allow your mouse to scroll smoothly on macOS.",
-  download_button: "Download Now",
-  download_releaseNotes: "Release Notes",
-  footer_systemRequirement: "Requires macOS 10.13+",
-  footer_installViaHomebrew: "Install via homebrew",
-  homebrew_title: "Install via Homebrew",
-  homebrew_description: "Run the following command in your terminal:",
-  homebrew_copy: "Copy",
-  homebrew_copied: "Copied!"
-}
+  languageSelector: {
+    title: "Select Language",
+  },
+  a11y: {
+    skipToContent: "Skip to content",
+    closeDialog: "Close dialog",
+    githubAria: "Mos on GitHub",
+    appIconAlt: "Mos app icon",
+    scrollCurveGraph: "Scroll curve graph",
+  },
+  nav: {
+    githubTitle: "GitHub",
+  },
+  hero: {
+    badgeLine1: "Smooth scrolling for mouse wheels on macOS",
+    badgeLine2: "per-app profiles · independent axes · buttons & shortcuts",
+    titleLine1: "Turn the mouse",
+    titleLine2Before: "into ",
+    titleLine2Highlight: "flow",
+    titleLine2After: ".",
+    lead:
+      "Mos is a free, open-source macOS utility that makes wheel scrolling feel closer to a trackpad, without getting in your way. Tune curves, split axes, and override behavior per app.",
+    ctaDownload: "Download Mos",
+    ctaViewGitHub: "View on GitHub",
+    ctaInstallHomebrew: "Install via Homebrew",
+    requirementsLine1: "Requires macOS 10.13+",
+    requirementsLine2: "Free · Open source",
+    scrollHint: "Scroll to explore",
+  },
+  sectionFeel: {
+    title: "Deterministic scroll. Tunable feel.",
+    lead:
+      "Mos turns raw wheel deltas into predictable motion. Keep the same feel across apps, and override it when you need to.",
+    cards: {
+      curves: {
+        kicker: "Curves & Acceleration",
+        title: "Shape the feel.",
+        body:
+          "Smoothness is a curve. Adjust step, gain, and duration, and see how raw wheel deltas turn into controlled motion.",
+      },
+      axes: {
+        kicker: "Independent Axes",
+        title: "Split X and Y.",
+        body:
+          "Treat vertical and horizontal scroll as separate axes. Toggle smoothing and reverse independently for each.",
+        smooth: "Smooth",
+        reverse: "Reverse",
+        on: "On",
+        off: "Off",
+      },
+      perApp: {
+        kicker: "Per-app Profiles",
+        title: "Different apps, different feel.",
+        body:
+          "Let each app inherit defaults, or override scroll and button rules. Precision where it matters, smooth everywhere else.",
+      },
+      buttons: {
+        kicker: "Buttons & Shortcuts",
+        title: "Bind, record, repeat.",
+        body:
+          "Record mouse or keyboard events and bind them to system shortcuts. Use the live monitor to see what your devices are sending.",
+        quickBind: "Quick Bind",
+        rows: {
+          button4: "Button 4",
+          button5: "Button 5",
+          wheelClick: "Wheel Click",
+          missionControl: "Mission Control",
+          nextSpace: "Next Space",
+          appSwitcher: "App Switcher",
+        },
+      },
+    },
+  },
+  download: {
+    title: "Download Mos. Tune your scroll.",
+    body:
+      "Install in seconds, tweak it when you need to, and keep your scroll behavior consistent across the apps you live in.",
+    ctaDownload: "Download",
+    releaseNotes: "Release notes",
+    docs: "Docs",
+  },
+  homebrew: {
+    title: "Homebrew",
+    copy: "Copy",
+    copied: "Copied",
+    tip: "Tip: If you’re on beta, your cask might be {cask}.",
+  },
+  footer: {
+    latestRelease: "Latest release",
+    latestVersion: "Latest {version}",
+    requiresMacos: "Requires macOS 10.13+",
+    github: "GitHub",
+    wiki: "Wiki",
+    releases: "Releases",
+  },
+  easing: {
+    graphAria: "Scroll curve graph",
+    step: {
+      label: "Step",
+      aria: "Step",
+      help: "Quantization floor for wheel deltas.",
+    },
+    gain: {
+      label: "Gain",
+      aria: "Gain",
+      help: "Scales distance per tick and how fast the curve ramps.",
+    },
+    duration: {
+      label: "Duration",
+      aria: "Duration",
+      help: "Smoothing time constant (higher means longer tail).",
+    },
+    footer: "ScrollCore curve",
+  },
+};
