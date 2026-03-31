@@ -78,6 +78,10 @@ class ScrollCore {
         if ScrollUtils.shared.getLaunchpadActivity(withRunningApplication: targetRunningApplication) {
             enableSmooth = false
         }
+        // Popup menu window active then force disable smooth scrolling
+        if ScrollUtils.shared.isMouseOverMenuWindow(event: event) {
+            enableSmooth = false
+        }
         // 滚动事件
         let scrollEvent = ScrollEvent(with: event)
         // Y轴

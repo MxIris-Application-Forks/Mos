@@ -106,6 +106,43 @@ class ScrollUtils {
         return launchpadActiveCache
     }
 
+    // Detect if the mouse cursor is over a popup menu window
+    private var menuWindowCache = false
+    private var menuWindowLastDetectTime = 0.0
+    func isMouseOverMenuWindow(event: CGEvent) -> Bool {
+        let nowTime = Date().timeIntervalSince1970
+        if nowTime - menuWindowLastDetectTime < 0.2 {
+            return menuWindowCache
+        }
+        menuWindowLastDetectTime = nowTime
+        menuWindowCache = false
+        let mouseLocation = event.location
+        guard let windowInfoList = CGWindowListCopyWindowInfo([.optionOnScreenOnly, .excludeDesktopElements], kCGNullWindowID) as? [[String: Any]] else {
+            return false
+        }
+        let popUpMenuWindowLevel = Int(CGWindowLevelForKey(.popUpMenuWindow))
+        // Only look for windows at exactly the popup menu level (101)
+        // This avoids false positives from system overlays at higher levels
+        for windowInfo in windowInfoList {
+            guard let windowLayer = windowInfo[kCGWindowLayer as String] as? Int,
+                  windowLayer == popUpMenuWindowLevel else {
+                continue
+            }
+            guard let boundsDict = windowInfo[kCGWindowBounds as String] as? NSDictionary else {
+                continue
+            }
+            var windowBounds = CGRect.zero
+            guard CGRectMakeWithDictionaryRepresentation(boundsDict, &windowBounds) else {
+                continue
+            }
+            if windowBounds.contains(mouseLocation) {
+                menuWindowCache = true
+                break
+            }
+        }
+        return menuWindowCache
+    }
+
     // 从 exceptionalApplications 中取回符合传入的 key 的 ExceptionalApplication 对象
     // Key 在 applications 初始化时指定于 ExceptionalApplication 中
     func getExceptionalApplication(from runningApplication: NSRunningApplication?) -> ExceptionalApplication? {
