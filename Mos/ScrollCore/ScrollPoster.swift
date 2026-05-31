@@ -7,13 +7,14 @@
 //
 
 import Cocoa
+import os
 
 class ScrollPoster {
-    
+
     // 单例
     static let shared = ScrollPoster()
     init() { NSLog("Module initialized: ScrollPoster") }
-    
+
     // 插值器
     private let filter = ScrollFilter()
     // 发送器
@@ -25,16 +26,21 @@ class ScrollPoster {
     // 滚动配置
     private var shifting = false
     private var duration = Options.shared.scrollAdvanced.durationTransition
-    // 外部依赖
-    var ref: (event: CGEvent?, proxy: CGEventTapProxy?) = (event: nil, proxy: nil)
+    // 外部依赖 (主事件 Tap 线程写入, CVDisplayLink IO 线程读取, 必须加锁防止跨线程 CGEvent 释放与 retain 的竞争)
+    private let refLock = OSAllocatedUnfairLock<(event: CGEvent?, proxy: CGEventTapProxy?)>(initialState: (event: nil, proxy: nil))
+    private func snapshotRef() -> (event: CGEvent?, proxy: CGEventTapProxy?) {
+        refLock.withLock { $0 }
+    }
+    private func setRef(_ newValue: (event: CGEvent?, proxy: CGEventTapProxy?)) {
+        refLock.withLock { $0 = newValue }
+    }
 }
 
 // MARK: - 滚动数据更新控制
 extension ScrollPoster {
     func update(event: CGEvent, proxy: CGEventTapProxy, duration: Double, y: Double, x: Double, speed: Double, amplification: Double = 1) -> Self {
         // 更新依赖数据
-        ref.event = event
-        ref.proxy = proxy
+        setRef((event: event, proxy: proxy))
         // 更新滚动配置
         self.duration = duration
         // 更新滚动数据
@@ -75,7 +81,7 @@ extension ScrollPoster {
     }
     func reset() {
         // 重置数值
-        ref = (event: nil, proxy: nil)
+        setRef((event: nil, proxy: nil))
         current = ( y: 0.0, x: 0.0 )
         delta = ( y: 0.0, x: 0.0 )
         buffer = ( y: 0.0, x: 0.0 )
@@ -114,11 +120,12 @@ extension ScrollPoster {
         // 先设置阶段为停止
         ScrollPhase.shared.stop(phase)
         // 对于 Phase.PauseAuto, 我们在结束前额外发送一个事件来重置 Chrome 的滚动缓冲区
-        if let validEvent = ref.event, ScrollUtils.shared.isEventTargetingChrome(validEvent) {
+        let snapshot = snapshotRef()
+        if let validEvent = snapshot.event, ScrollUtils.shared.isEventTargetingChrome(validEvent) {
             // 需要附加特定的阶段数据, 只有 Phase.PauseManual 对应的 [4.0, 0.0] 可以正确使 Chrome 恢复
             validEvent.setDoubleValueField(.scrollWheelEventScrollPhase, value: PhaseValueMapping[Phase.PauseManual]![PhaseItem.Scroll]!)
             validEvent.setDoubleValueField(.scrollWheelEventMomentumPhase, value: PhaseValueMapping[Phase.PauseManual]![PhaseItem.Momentum]!)
-            post(ref, (y: 0.0, x: 0.0))
+            post(snapshot, (y: 0.0, x: 0.0))
         }
         // 重置参数
         reset()
@@ -143,8 +150,8 @@ private extension ScrollPoster {
         let filledValue = filter.fill(with: frame)
         // 变换滚动结果
         let shiftedValue = shift(with: filledValue)
-        // 发送滚动结果
-        post(ref, shiftedValue)
+        // 发送滚动结果 (使用快照, 避免与主线程的 update/reset 竞争)
+        post(snapshotRef(), shiftedValue)
         // 如果临近目标距离小于精确度门限则暂停滚动
         if (
             frame.y.magnitude <= Options.shared.scrollAdvanced.precision &&
