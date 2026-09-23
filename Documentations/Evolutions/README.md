@@ -8,3 +8,4 @@
 | # | 标题 | 状态 |
 |---|------|------|
 | 0001 | [消除平滑滚动的起步阻力](0001-scroll-startup-resistance.md) | Implemented |
+| 0002 | [滤除滚轮回弹引起的反向滚动](0002-wheel-rebound-reversal.md) | Implemented |

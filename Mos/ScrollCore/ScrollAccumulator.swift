@@ -12,8 +12,10 @@ import Foundation
 /// 滚轮输入是离散事件, 每次 tick 都会让待滚动的距离突然增加, 直接并入缓冲区会让插值输出出现速度台阶.
 /// 这里按输入的来源区分处理:
 ///
-/// - 从静止起步, 或滚动途中反向: 增量全额写入缓冲区, 首帧即刻全额响应, 不做任何平滑.
+/// - 从静止起步, 或确认换向: 增量全额写入缓冲区, 首帧即刻全额响应, 不做任何平滑.
 /// - 同向的后续增量: 先存入待注入池, 再逐帧按固定比例释放进缓冲区, 把台阶抹成斜坡.
+/// - 滚动途中的单格反向输入: 先暂扣不执行. 下一格回到原方向就当作滚轮回弹丢弃,
+///   下一格仍是反向才确认换向, 此时两格按从静止起步拨出的顺序处理.
 ///
 /// 这样起步跟手与滚动平滑不再互相牺牲 —— 平滑只作用在滚动途中的跳变上, 而不像在输出侧做滤波那样,
 /// 把起步的阶跃当成噪声一并磨掉.
@@ -21,6 +23,10 @@ import Foundation
 /// 分摊强度对所有同向输入一视同仁, 不随手速变化. 曾经试过让它随输入密集程度自适应 (滚得越急越少分摊),
 /// 起步阻力确实更小, 但滚动会变得一顿一顿 —— 密集输入少分摊等于把速度纹波放了回来.
 /// 详见提案 scroll-startup-resistance 的决策日志.
+///
+/// 反向输入要暂扣, 是因为用力拨滚轮时拨到头常会往回多跳一格, 而 macOS 的滚动加速把这一格当作快速滚动的延续,
+/// 放大到几十点. 立即掉头会丢掉尚未滚完的距离, 并按速度倍率反向滑行到下一次拨动, 表现为往下滚时先往上弹一下.
+/// 代价是滚动途中只往回拨一格会被忽略. 详见提案 wheel-rebound-reversal.
 struct ScrollAccumulator {
 
     /// 每帧从待注入池释放进缓冲区的比例
@@ -39,8 +45,10 @@ struct ScrollAccumulator {
     /// 最近一帧输出的距离, 用于收敛判断
     private(set) var mostRecentFrame = 0.0
 
-    /// 上一次输入的方向, 用于判断本次输入是否与当前滚动同向
+    /// 当前滚动的方向, 用于判断本次输入是否与当前滚动同向
     private var previousDelta = 0.0
+    /// 滚动途中收到的第一格反向输入, 在下一格输入证实换向之前不生效
+    private var unconfirmedReversal = 0.0
     private let injectionRate: Double
 
     init(injectionRate: Double = ScrollAccumulator.defaultInjectionRate) {
@@ -56,16 +64,32 @@ extension ScrollAccumulator {
     ///   - scale: 作用在增量上的倍率, 即滚动速度与加速倍数的乘积
     mutating func accept(delta: Double, scaledBy scale: Double) {
         let distance = delta * scale
-        if delta * previousDelta > 0 {
-            // 同向滚动: 交给待注入池逐帧释放, 避免缓冲区跳变造成速度台阶
+        let continuesCurrentDirection = delta * previousDelta > 0
+        let opposesCurrentDirection = delta * previousDelta < 0
+        if continuesCurrentDirection {
+            // 同向滚动: 暂扣的反向输入被证实只是回弹, 直接丢弃;
+            // 增量交给待注入池逐帧释放, 避免缓冲区跳变造成速度台阶
+            unconfirmedReversal = 0.0
             pendingInjection += distance
+            previousDelta = delta
+        } else if opposesCurrentDirection && unconfirmedReversal == 0.0 {
+            // 滚动途中的第一格反向输入: 先暂扣, 滚动照原方向继续, 由下一格输入判定是回弹还是换向
+            unconfirmedReversal = distance
+        } else if opposesCurrentDirection {
+            // 连续第二格反向, 确认换向: 暂扣的那一格按起步全额写入, 这一格作为后续增量进入待注入池
+            buffer = unconfirmedReversal
+            current = 0.0
+            pendingInjection = distance
+            unconfirmedReversal = 0.0
+            previousDelta = delta
         } else {
-            // 从静止起步或反向滚动: 全额写入, 保证首帧即刻响应
+            // 从静止起步, 或本轴没有输入 (增量为 0): 全额写入, 保证首帧即刻响应
             buffer = distance
             current = 0.0
             pendingInjection = 0.0
+            unconfirmedReversal = 0.0
+            previousDelta = delta
         }
-        previousDelta = delta
     }
 }
 
@@ -98,14 +122,18 @@ extension ScrollAccumulator {
     mutating func brake() {
         buffer = current
         pendingInjection = 0.0
+        unconfirmedReversal = 0.0
     }
 
     /// 重置到静止状态
+    ///
+    /// 暂扣的反向输入随之丢弃: 滑行结束时仍未被证实的那一格, 就是拨到头之后的回弹.
     mutating func reset() {
         buffer = 0.0
         current = 0.0
         pendingInjection = 0.0
         mostRecentFrame = 0.0
         previousDelta = 0.0
+        unconfirmedReversal = 0.0
     }
 }

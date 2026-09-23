@@ -86,15 +86,126 @@ struct ScrollAccumulatorTests {
 
     // MARK: - 反向
 
-    @Test("滚动途中反向时首帧立即掉头")
-    func reversalRespondsImmediately() {
+    @Test("连续两格反向即确认换向, 与从静止起步拨出这两格表现一致")
+    func confirmedReversalBehavesLikeFreshStart() {
         var accumulator = ScrollAccumulator()
         accumulator.accept(delta: 1.0, scaledBy: 100.0)
         _ = accumulator.advance(transition: 0.2)
+        accumulator.accept(delta: -1.0, scaledBy: 100.0)
+        accumulator.accept(delta: -1.0, scaledBy: 100.0)
+        // 第一格反向按起步全额写入, 第二格进入待注入池并在本帧释放 25%: 0.2 × (100 + 25) = 25.
+        // 不先减速再掉头, 也不吞掉被暂扣的第一格
+        #expect(accumulator.advance(transition: 0.2).isApproximately(-25.0))
+    }
+
+    @Test("没有输入的轴传入 0 时, 暂扣的反向输入不会因此生效")
+    func zeroInputDoesNotConfirmReversal() {
+        var accumulator = ScrollAccumulator()
+        accumulator.accept(delta: 1.0, scaledBy: 100.0)
         _ = accumulator.advance(transition: 0.2)
         accumulator.accept(delta: -1.0, scaledBy: 100.0)
-        // 反向等同于重新起步: 首帧就应当是完整的 -20, 而不是先减速再掉头
-        #expect(accumulator.advance(transition: 0.2).isApproximately(-20.0))
+        // ScrollPoster 每次都会更新两个轴, 只有另一轴有输入时本轴收到的就是 0, 这不是换向的证据
+        accumulator.accept(delta: 0.0, scaledBy: 100.0)
+        #expect(accumulator.advance(transition: 0.2) >= 0.0)
+    }
+
+    // MARK: - 滚轮回弹
+
+    /// 实机录制的一段滚轮输入 (SteelSeries Rival 650, macOS 26.7, 60 Hz 显示器, 速度 3, 平滑时长 3.9)
+    ///
+    /// 数值是 ScrollCore 按步长 35 归一化之后交给累积器的增量, 符号取设备的原始方向 ——
+    /// Mos 的反转选项只是整体翻转符号, 不改变累积器的行为. 录制方法与分析见提案 wheel-rebound-reversal.
+    struct RecordedWheelInput: CustomTestStringConvertible, Sendable {
+        enum Step: Sendable {
+            /// 一格滚轮输入
+            case tick(Double)
+            /// 下一格输入到来之前 Mos 推进的帧数
+            case frames(Int)
+        }
+
+        static let scale = 3.0
+        static let transition = 0.134
+
+        let testDescription: String
+        /// 用户实际在拨的方向
+        let scrollDirection: Double
+        /// 只把朝 scrollDirection 的输入相加再乘以速度得到的距离, 夹杂的反向输入不计
+        let intendedDistance: Double
+        let steps: [Step]
+
+        /// 拨到头时滚轮往回跳了一格, 被 macOS 的滚动加速放大到 -50, 之后停顿约 230 ms 才开始下一次拨动
+        static let reboundAtEndOfFlick = RecordedWheelInput(
+            testDescription: "拨到头时往回跳的一格",
+            scrollDirection: 1.0,
+            intendedDistance: (35 + 35 + 52 + 35 + 35 + 57 + 76) * 3,
+            steps: [
+                .tick(35), .tick(35), .frames(2), .tick(52), .frames(1), .tick(-50), .frames(14),
+                .tick(35), .tick(35), .frames(1), .tick(57), .tick(76),
+            ]
+        )
+
+        /// 一次拨动的中途夹进一格反向输入, 紧接着又回到原方向
+        static let strayTickWithinFlick = RecordedWheelInput(
+            testDescription: "拨动途中夹进的一格",
+            scrollDirection: -1.0,
+            intendedDistance: (35 + 35 + 55 + 56) * 3,
+            steps: [
+                .tick(-35), .frames(1), .tick(-35), .tick(59), .frames(1), .tick(-55), .tick(-56),
+            ]
+        )
+
+        /// 连续两次拨动, 各夹进一格反向输入: 第一格在拨动途中, 第二格在上一次滑行还没停时的下一次拨动开头
+        static let strayTicksAcrossFlicks = RecordedWheelInput(
+            testDescription: "相邻两次拨动各夹进一格",
+            scrollDirection: -1.0,
+            intendedDistance: (35 + 60 + 59 + 91 + 99 + 103 + 56 + 57 + 87) * 3,
+            steps: [
+                .tick(-35), .frames(1), .tick(51), .frames(1), .tick(-60), .tick(-59), .tick(-91), .frames(1),
+                .tick(-99), .frames(3), .tick(-103), .frames(11),
+                .tick(35), .frames(1), .tick(-56), .tick(-57), .frames(1), .tick(-87),
+            ]
+        )
+    }
+
+    /// 按录制时的顺序把输入交给累积器, 再推进到收敛, 返回每一帧的输出
+    private func replay(_ recording: RecordedWheelInput) -> [Double] {
+        var accumulator = ScrollAccumulator()
+        var frames: [Double] = []
+        for step in recording.steps {
+            switch step {
+            case .tick(let delta):
+                accumulator.accept(delta: delta, scaledBy: RecordedWheelInput.scale)
+            case .frames(let frameCount):
+                for _ in 0..<frameCount {
+                    frames.append(accumulator.advance(transition: RecordedWheelInput.transition))
+                }
+            }
+        }
+        while frames.count < 10_000 {
+            frames.append(accumulator.advance(transition: RecordedWheelInput.transition))
+            if accumulator.hasSettled(within: 0.0001) { break }
+        }
+        return frames
+    }
+
+    @Test("滚动途中夹进的单格反向输入不会让画面往回滚", arguments: [
+        RecordedWheelInput.reboundAtEndOfFlick,
+        RecordedWheelInput.strayTickWithinFlick,
+        RecordedWheelInput.strayTicksAcrossFlicks,
+    ])
+    func strayOppositeTickDoesNotScrollBackward(recording: RecordedWheelInput) {
+        let backwardFrames = replay(recording).filter { $0 * recording.scrollDirection < 0 }
+        #expect(backwardFrames == [])
+    }
+
+    @Test("被当作回弹丢弃的反向输入不会吃掉已经拨出的距离", arguments: [
+        RecordedWheelInput.reboundAtEndOfFlick,
+        RecordedWheelInput.strayTickWithinFlick,
+        RecordedWheelInput.strayTicksAcrossFlicks,
+    ])
+    func strayOppositeTickDoesNotShortenScroll(recording: RecordedWheelInput) {
+        let deliveredDistance = replay(recording).reduce(0.0, +) * recording.scrollDirection
+        #expect(deliveredDistance.isApproximately(recording.intendedDistance, tolerance: 0.01))
     }
 
     // MARK: - 收敛与中止
