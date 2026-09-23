@@ -23,7 +23,6 @@
 		0BB0F1C020F3A05D00909B7D /* WelcomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BB0F1BF20F3A05D00909B7D /* WelcomeViewController.swift */; };
 		0BC2AD2F20F3BA090084416B /* PreferencesContributorsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BC2AD2E20F3BA090084416B /* PreferencesContributorsViewController.swift */; };
 		0BD39F68204EFC6C000CCC42 /* StatusItemManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BD39F67204EFC6C000CCC42 /* StatusItemManager.swift */; };
-		0BE4C93B20617C6E0001EA0E /* ScrollFilter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BE4C93A20617C6E0001EA0E /* ScrollFilter.swift */; };
 		0BE5A292253A1168006D61C0 /* LoginServiceKit in Frameworks */ = {isa = PBXBuildFile; productRef = 0BE5A291253A1168006D61C0 /* LoginServiceKit */; };
 		0BE5A296253A119C006D61C0 /* Charts in Frameworks */ = {isa = PBXBuildFile; productRef = 0BE5A295253A119C006D61C0 /* Charts */; };
 		22003C6E1E8555F0001220BC /* Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22003C6D1E8555F0001220BC /* Utils.swift */; };
@@ -55,6 +54,11 @@
 		23BB4D3121D775D4009B51E9 /* EventMonitor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23BB4D3021D775D4009B51E9 /* EventMonitor.swift */; };
 		23E3C96D21DCE8F10098B107 /* StatusItemPopoverView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23E3C96C21DCE8F10098B107 /* StatusItemPopoverView.swift */; };
 		23E9673F23613D1100E652F6 /* PreferencesExceptionInputViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23E9673E23613D1100E652F6 /* PreferencesExceptionInputViewController.swift */; };
+		900F82325EA48F7CE96D9345 /* ScrollAccumulatorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BEB016250BEB0222864F0885 /* ScrollAccumulatorTests.swift */; };
+		97D1BA44B0F1934967379CCF /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 24A2AAD90783E7D1CD1A4B98 /* Cocoa.framework */; };
+		9EDA443B0424B0D35BAB24A3 /* ScrollAccumulator.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1EE9726290AA813E5AB6E11 /* ScrollAccumulator.swift */; };
+		C19C95A41804A15032BB1FD8 /* Interpolator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B12EF1E203ADFB10058B169 /* Interpolator.swift */; };
+		DA6BB01FDEFC53E8CB3486FD /* ScrollAccumulator.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1EE9726290AA813E5AB6E11 /* ScrollAccumulator.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -94,9 +98,8 @@
 		0BB0F1BF20F3A05D00909B7D /* WelcomeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WelcomeViewController.swift; sourceTree = "<group>"; };
 		0BC2AD2E20F3BA090084416B /* PreferencesContributorsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreferencesContributorsViewController.swift; sourceTree = "<group>"; };
 		0BD39F67204EFC6C000CCC42 /* StatusItemManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatusItemManager.swift; sourceTree = "<group>"; };
-		0BE4C93A20617C6E0001EA0E /* ScrollFilter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScrollFilter.swift; sourceTree = "<group>"; };
 		22003C6D1E8555F0001220BC /* Utils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Utils.swift; sourceTree = "<group>"; };
-		22142DA01E25344E00E4BFBF /* Mos.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Mos.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		22142DA01E25344E00E4BFBF /* Mos-Debug.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Mos-Debug.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		22142DA31E25344E00E4BFBF /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		22142DA51E25344E00E4BFBF /* MonitorViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MonitorViewController.swift; sourceTree = "<group>"; };
 		22142DAA1E25344E00E4BFBF /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
@@ -129,6 +132,10 @@
 		23BB4D3021D775D4009B51E9 /* EventMonitor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventMonitor.swift; sourceTree = "<group>"; };
 		23E3C96C21DCE8F10098B107 /* StatusItemPopoverView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatusItemPopoverView.swift; sourceTree = "<group>"; };
 		23E9673E23613D1100E652F6 /* PreferencesExceptionInputViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreferencesExceptionInputViewController.swift; sourceTree = "<group>"; };
+		24A2AAD90783E7D1CD1A4B98 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.0.sdk/System/Library/Frameworks/Cocoa.framework; sourceTree = DEVELOPER_DIR; };
+		B5A640DE7B84BDD74D2DFF6D /* MosTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MosTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		BEB016250BEB0222864F0885 /* ScrollAccumulatorTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ScrollAccumulatorTests.swift; sourceTree = "<group>"; };
+		D1EE9726290AA813E5AB6E11 /* ScrollAccumulator.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ScrollAccumulator.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -141,6 +148,14 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		7C977C250F05E4CFC8BE3DFE /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				97D1BA44B0F1934967379CCF /* Cocoa.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
@@ -149,11 +164,11 @@
 			children = (
 				2291A8A21E2A5400004181B8 /* ScrollCore.swift */,
 				0B12EF1C203ADD230058B169 /* ScrollUtils.swift */,
-				0BE4C93A20617C6E0001EA0E /* ScrollFilter.swift */,
 				0B6D3B692041C348004CC064 /* ScrollEvent.swift */,
 				0B474328258E12A200A5F8A3 /* ScrollPhase.swift */,
 				0B99C5FB2577FC9200021578 /* ScrollPoster.swift */,
 				0B12EF1E203ADFB10058B169 /* Interpolator.swift */,
+				D1EE9726290AA813E5AB6E11 /* ScrollAccumulator.swift */,
 			);
 			path = ScrollCore;
 			sourceTree = "<group>";
@@ -241,13 +256,16 @@
 			children = (
 				22142DA21E25344E00E4BFBF /* Mos */,
 				22142DA11E25344E00E4BFBF /* Products */,
+				DE6EBABA0A581B38FCABA31C /* Frameworks */,
+				BB2E5AFB4B0707E9FED06B99 /* MosTests */,
 			);
 			sourceTree = "<group>";
 		};
 		22142DA11E25344E00E4BFBF /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				22142DA01E25344E00E4BFBF /* Mos.app */,
+				22142DA01E25344E00E4BFBF /* Mos-Debug.app */,
+				B5A640DE7B84BDD74D2DFF6D /* MosTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -318,6 +336,30 @@
 			path = Windows;
 			sourceTree = "<group>";
 		};
+		8D19E2A792778C62B65535AB /* OS X */ = {
+			isa = PBXGroup;
+			children = (
+				24A2AAD90783E7D1CD1A4B98 /* Cocoa.framework */,
+			);
+			name = "OS X";
+			sourceTree = "<group>";
+		};
+		BB2E5AFB4B0707E9FED06B99 /* MosTests */ = {
+			isa = PBXGroup;
+			children = (
+				BEB016250BEB0222864F0885 /* ScrollAccumulatorTests.swift */,
+			);
+			path = MosTests;
+			sourceTree = "<group>";
+		};
+		DE6EBABA0A581B38FCABA31C /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				8D19E2A792778C62B65535AB /* OS X */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -339,8 +381,25 @@
 				0BE5A295253A119C006D61C0 /* Charts */,
 			);
 			productName = Mos;
-			productReference = 22142DA01E25344E00E4BFBF /* Mos.app */;
+			productReference = 22142DA01E25344E00E4BFBF /* Mos-Debug.app */;
 			productType = "com.apple.product-type.application";
+		};
+		2598F425A3546C5B2AF69C04 /* MosTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = C1BC00C633329ABE2EDA8ED5 /* Build configuration list for PBXNativeTarget "MosTests" */;
+			buildPhases = (
+				9505C4897E3886B084D0BA6F /* Sources */,
+				7C977C250F05E4CFC8BE3DFE /* Frameworks */,
+				4110ED9AF30CEAEFC4943773 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = MosTests;
+			productName = MosTests;
+			productReference = B5A640DE7B84BDD74D2DFF6D /* MosTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
 		};
 /* End PBXNativeTarget section */
 
@@ -395,6 +454,7 @@
 			projectRoot = "";
 			targets = (
 				22142D9F1E25344E00E4BFBF /* Mos */,
+				2598F425A3546C5B2AF69C04 /* MosTests */,
 			);
 		};
 /* End PBXProject section */
@@ -407,6 +467,13 @@
 				23529E0C237087A400806D92 /* Assets.xcassets in Resources */,
 				22142DAB1E25344E00E4BFBF /* Main.storyboard in Resources */,
 				2225F8E81E3B1A5C0020DD22 /* Localizable.strings in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		4110ED9AF30CEAEFC4943773 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -450,7 +517,6 @@
 				23E9673F23613D1100E652F6 /* PreferencesExceptionInputViewController.swift in Sources */,
 				232E50A7236B372100265C58 /* PreferencesAdvanceWithApplicationViewController.swift in Sources */,
 				22A32B331E334B2E00A5CF38 /* PreferencesAboutViewController.swift in Sources */,
-				0BE4C93B20617C6E0001EA0E /* ScrollFilter.swift in Sources */,
 				0B6D3B682041A790004CC064 /* WindowManager.swift in Sources */,
 				0B12EF1A203AD9C80058B169 /* Options.swift in Sources */,
 				228093501E2B5DA90061A00F /* PreferencesGeneralViewController.swift in Sources */,
@@ -460,6 +526,17 @@
 				22142DA41E25344E00E4BFBF /* AppDelegate.swift in Sources */,
 				0B12EF1D203ADD230058B169 /* ScrollUtils.swift in Sources */,
 				236B69B1224B79B100DEF435 /* EnhanceArray.swift in Sources */,
+				DA6BB01FDEFC53E8CB3486FD /* ScrollAccumulator.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		9505C4897E3886B084D0BA6F /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				900F82325EA48F7CE96D9345 /* ScrollAccumulatorTests.swift in Sources */,
+				9EDA443B0424B0D35BAB24A3 /* ScrollAccumulator.swift in Sources */,
+				C19C95A41804A15032BB1FD8 /* Interpolator.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -508,6 +585,20 @@
 /* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
+		0E96EA1E5C44B21146C0CD80 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = D5Q73692VW;
+				GENERATE_INFOPLIST_FILE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 13.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.MxIris.MosTests;
+				PRODUCT_NAME = MosTests;
+				SDKROOT = macosx;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
 		22142DC31E25344F00E4BFBF /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -657,8 +748,8 @@
 				MACOSX_DEPLOYMENT_TARGET = 13.0;
 				MARKETING_VERSION = 3.5.1;
 				MTL_ENABLE_DEBUG_INFO = NO;
-				PRODUCT_BUNDLE_IDENTIFIER = com.MxIris.Mos;
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_BUNDLE_IDENTIFIER = dev.MxIris.Mos;
+				PRODUCT_NAME = "$(TARGET_NAME)-Debug";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				RUNTIME_EXCEPTION_ALLOW_DYLD_ENVIRONMENT_VARIABLES = NO;
 				RUNTIME_EXCEPTION_ALLOW_JIT = NO;
@@ -721,6 +812,20 @@
 			};
 			name = Release;
 		};
+		7CB61187593283752CBF3720 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = D5Q73692VW;
+				GENERATE_INFOPLIST_FILE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 13.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.MxIris.MosTests;
+				PRODUCT_NAME = MosTests;
+				SDKROOT = macosx;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -738,6 +843,15 @@
 			buildConfigurations = (
 				22142DC61E25344F00E4BFBF /* Debug */,
 				22142DC71E25344F00E4BFBF /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		C1BC00C633329ABE2EDA8ED5 /* Build configuration list for PBXNativeTarget "MosTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				7CB61187593283752CBF3720 /* Release */,
+				0E96EA1E5C44B21146C0CD80 /* Debug */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

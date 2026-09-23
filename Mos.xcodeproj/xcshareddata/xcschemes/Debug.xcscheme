@@ -51,6 +51,16 @@
          </AdditionalOption>
       </AdditionalOptions>
       <Testables>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "2598F425A3546C5B2AF69C04"
+               BuildableName = "MosTests.xctest"
+               BlueprintName = "MosTests"
+               ReferencedContainer = "container:Mos.xcodeproj">
+            </BuildableReference>
+         </TestableReference>
       </Testables>
    </TestAction>
    <LaunchAction

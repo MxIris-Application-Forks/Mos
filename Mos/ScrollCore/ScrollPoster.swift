@@ -15,14 +15,11 @@ class ScrollPoster {
     static let shared = ScrollPoster()
     init() { NSLog("Module initialized: ScrollPoster") }
 
-    // 插值器
-    private let filter = ScrollFilter()
     // 发送器
     private var poster: CVDisplayLink?
     // 滚动数据
-    private var current = (y: 0.0, x: 0.0)  // 当前滚动距离
-    private var delta = (y: 0.0, x: 0.0)  // 滚动方向记录
-    private var buffer = (y: 0.0, x: 0.0)  // 滚动缓冲距离
+    private var verticalAccumulator = ScrollAccumulator()
+    private var horizontalAccumulator = ScrollAccumulator()
     // 滚动配置
     private var shifting = false
     private var duration = Options.shared.scrollAdvanced.durationTransition
@@ -44,19 +41,9 @@ extension ScrollPoster {
         // 更新滚动配置
         self.duration = duration
         // 更新滚动数据
-        if y*delta.y > 0 {
-            buffer.y += y * speed * amplification
-        } else {
-            buffer.y = y * speed * amplification
-            current.y = 0.0
-        }
-        if x*delta.x > 0 {
-            buffer.x += x * speed * amplification
-        } else {
-            buffer.x = x * speed * amplification
-            current.x = 0.0
-        }
-        delta = (y: y, x: x)
+        let scale = speed * amplification
+        verticalAccumulator.accept(delta: y, scaledBy: scale)
+        horizontalAccumulator.accept(delta: x, scaledBy: scale)
         return self
     }
     func updateShifting(enable: Bool) {
@@ -77,16 +64,14 @@ extension ScrollPoster {
         }
     }
     func brake() {
-        ScrollPoster.shared.buffer = ScrollPoster.shared.current
+        verticalAccumulator.brake()
+        horizontalAccumulator.brake()
     }
     func reset() {
         // 重置数值
         setRef((event: nil, proxy: nil))
-        current = ( y: 0.0, x: 0.0 )
-        delta = ( y: 0.0, x: 0.0 )
-        buffer = ( y: 0.0, x: 0.0 )
-        // 重置插值器
-        filter.reset()
+        verticalAccumulator.reset()
+        horizontalAccumulator.reset()
     }
 }
 
@@ -136,26 +121,20 @@ extension ScrollPoster {
 private extension ScrollPoster {
     // 处理滚动事件
     func processing() {
-        // 计算插值
+        // 推进一帧, 累积器内部完成待注入距离的释放与插值
         let frame = (
-            y: Interpolator.lerp(src: current.y, dest: buffer.y, trans: duration),
-            x: Interpolator.lerp(src: current.x, dest: buffer.x, trans: duration)
+            y: verticalAccumulator.advance(transition: duration),
+            x: horizontalAccumulator.advance(transition: duration)
         )
-        // 更新滚动位置
-        current = (
-            y: current.y + frame.y,
-            x: current.x + frame.x
-        )
-        // 平滑滚动结果
-        let filledValue = filter.fill(with: frame)
         // 变换滚动结果
-        let shiftedValue = shift(with: filledValue)
+        let shiftedValue = shift(with: frame)
         // 发送滚动结果 (使用快照, 避免与主线程的 update/reset 竞争)
         post(snapshotRef(), shiftedValue)
-        // 如果临近目标距离小于精确度门限则暂停滚动
+        // 如果两轴都已收敛到精确度门限内则暂停滚动
+        let precision = Options.shared.scrollAdvanced.precision
         if (
-            frame.y.magnitude <= Options.shared.scrollAdvanced.precision &&
-            frame.x.magnitude <= Options.shared.scrollAdvanced.precision
+            verticalAccumulator.hasSettled(within: precision) &&
+            horizontalAccumulator.hasSettled(within: precision)
         ) {
             stop(Phase.PauseAuto)
         }
